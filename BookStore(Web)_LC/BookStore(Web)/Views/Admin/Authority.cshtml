@@ -1,0 +1,32 @@
+﻿@model BookStore_Web_.Models.VM.Occu_Dept
+@{
+    ViewBag.Title = "Authority";
+    Layout = "~/Views/Shared/AdminPage.cshtml";
+}
+
+<h1>權限設定</h1>
+<label>部門選擇</label>
+@Html.DropDownListFor(p => p.Dept_Information, (SelectList)ViewBag.Dept, "請選擇", new { @class = "form-control" })<br />
+<label>權限選擇</label>
+@Html.DropDownListFor(p => p.Emp_Occupation, (SelectList)ViewBag.Occu, "請選擇", new { @class = "form-control" })
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+        <th>@Html.DisplayNameFor(p=>p.Emp_Information.First().Emp_Name)</th>
+            <th>@Html.DisplayNameFor(p => p.Emp_Information.First().Emp_Occupation)</th>
+            <th>@Html.DisplayNameFor(p => p.Emp_Information.First().Emp_DeptID)</th>
+            <th>@Html.DisplayNameFor(p => p.Emp_Information.First().EmployeeID)</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model.Emp_Information)
+        { 
+         <tr>
+            @*<td>@emp.Emp_Name</td>*@
+             <td>@emp.Emp_Occupation.Emp_OccupationName</td>
+         </tr>
+        }
+    </tbody>
+</table>

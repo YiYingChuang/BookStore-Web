@@ -1,0 +1,130 @@
+﻿@model BookStore_Web_.Models.Absence_Table
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/AdminPage.cshtml";
+}
+
+<h2>申請請假單</h2>
+<div class="container body-content">
+@using (Html.BeginForm("Add", "AbsenceTable", FormMethod.Post, new { @class = "form-horizontal", @id= "Addform" }))
+{ 
+    <div class="form-group">
+        @Html.LabelFor(p => p.Absence_Type, new {@class = "col-sm-2 control-label"})
+        <div class="col-sm-10">
+            @Html.DropDownListFor(p => p.Absence_ID, (SelectList)ViewBag.AbsenceType, "--請選擇--", new { @class = "form-control" })           
+            @Html.ValidationMessageFor(p => p.Absence_ID, "", new { @class = "text-danger" })</div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.StartDate, new { @class = "col-sm-2 control-label"})
+        <div class="col-sm-10">            
+            @Html.EditorFor(p => p.StartDate, new { htmlAttributes = new { @class = "form-control", @type="date" } })
+            @*@Html.EditorFor(p => p.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "time" } })*@
+            <input type="time" class="form-control" id="StartDatetime" name="StartDatetime" required aria-describedby="StartDatetime-error" />
+            <div hidden id="StartDatetime-error" class="text-danger" >請填寫請假起始時間</div>
+            @Html.ValidationMessageFor(p => p.StartDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.EndDate, new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.EditorFor(p => p.EndDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+            @*@Html.EditorFor(p => p.EndDate, new { htmlAttributes = new { @class = "form-control", @type = "time" } })*@
+            <input type="time" class="form-control" id="EndDatetime" name="EndDatetime" required aria-describedby="EndDatetime-error" />
+            <div hidden id="EndDatetime-error" class="text-danger">請填寫請假結束時間</div>
+            @Html.ValidationMessageFor(p => p.EndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Reason, new { @class = "col-sm-2 control-label"})
+        <div class="col-sm-10">
+             @Html.EditorFor(p => p.Reason, new { htmlAttributes = new { @class = "form-control", placeholder = "字數不得超過300" } })
+            @Html.ValidationMessageFor(p => p.Reason, "", new { @class = "text-danger" })
+        </div>
+        
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Certificate_Doc, new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            <input type="file" class="form-control" name="Certificate_Doc" id="Certificate_Doc" accept="image/x-png, image/gif, image/jpeg, image/jpg" />
+            <input type="hidden" class="form-control" name="Certificate_Doc_ErrorMessage" id="Certificate_Doc_ErrorMessage" />
+        </div>   
+    </div>
+    @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class="btn btn-default" id="Addbtn" value="新增" />
+        </div>
+    </div>
+}
+    </div>
+
+<script>   
+    var StartTime = $('#StartDatetime');
+    var EndTime = $('#EndDatetime');
+    var SDTError = $('#StartDatetime-error');
+    var EDTError = $('#EndDatetime-error');
+    var flag=false;
+
+    function checktime(time,timeError) {
+        if (flag) {
+            if (time.val() == "")
+                timeError.show();
+            else {
+                timeError.hide();
+            }
+        }
+    }
+    function checktimevalue(firstTime, secondTime, timeError) {
+        if (flag) {
+            if (firstTime == secondTime || firstTime > secondTime) {
+                SDTError.text("請假起始時間不得大於或等於請假結束時間!!");
+            };
+        };
+    };
+    StartTime.on("blur", function () {
+        checktime(StartTime, SDTError);
+    });
+    StartTime.on("blur",checktime(StartTime, SDTError));
+    EndTime.on("blur", function () {
+        checktime(EndTime, EDTError);
+    });
+    $(document).on("blur", EndTime, function () {
+        checktime(StartTime, SDTError);
+        alert("Endtime");
+    });
+        
+    //EndTime.on("blur", checktime(EndTime, EDTError));
+        
+    
+
+
+    $("#Certificate_Doc").on('change', function () {
+        var fileName = document.getElementById("Certificate_Doc").value
+        if (fileName == "")
+            return true;;
+        var _filename = fileName.split(".")[1].toLowerCase();
+        if (_filename == "png" || _filename == "gif" || _filename == "jpeg" || _filename == "jpg")
+            return true;
+        else {
+            $('#Certificate_Doc_ErrorMessage').val("副檔名為" + fileName.split(".")[1] + "的格式不正確，請上傳圖片檔(.jpg;.jpeg;.gif)。");
+            return false;
+        }
+    });
+    
+    $('#Addbtn').on("click", function (e) {        
+        flag = true;
+        checktime(StartTime, SDTError);
+        checktime(EndTime, EDTError);       
+        var fileName = document.getElementById("Certificate_Doc").value
+        var _filename = fileName.split(".")[1].toLowerCase();
+        if (_filename == "png" || _filename == "gif" || _filename == "jpeg" || _filename == "jpg")
+            $('#Addform').submit();
+        else
+        {
+            e.preventDefault();
+            alert("副檔名為" + fileName.split(".")[1] + "的格式不正確，請上傳圖片檔(.jpg;.jpeg;.gif)。00");
+        }
+    });
+    
+</script>
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
