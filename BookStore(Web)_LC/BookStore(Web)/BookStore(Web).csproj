@@ -316,6 +316,7 @@
     <Content Include="Views\AbsenceTable\Edit.cshtml" />
     <Content Include="Views\Home\Action.cshtml" />
     <Content Include="Views\AbsenceTable\IndexPartial.cshtml" />
+    <Content Include="Views\AbsenceTable\IndexPager.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

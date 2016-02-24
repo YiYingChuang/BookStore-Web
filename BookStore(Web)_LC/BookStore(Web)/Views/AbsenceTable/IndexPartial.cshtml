@@ -5,20 +5,7 @@
 @{
     ViewBag.Title = "IndexPartial";
 }
-<table class="table table-bordered table-hover">
-    @*<thead>
-        <tr>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString(), "Index", new { sortBy = ViewBag.SortAbsenceTableNo })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString(), "Index", new { sortBy = ViewBag.SortAbsence_Type })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString(), "Index", new { sortBy = ViewBag.StartDate })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().EndDate).ToHtmlString(), "Index", new { sortBy = ViewBag.EndDate })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().Reason).ToHtmlString(), "Index", new { sortBy = ViewBag.Reason })</th>
-            <th>@Html.DisplayNameFor(model => model.First().Certificate_Doc)</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString(), "Index", new { sortBy = ViewBag.Status })</th>
-            <th>編輯</th>
-            <th>刪除</th>
-        </tr>
-    </thead>*@
+<table class="table table-bordered table-hover">       
     <tbody>
         @*Model是一個保留字，代表Controller傳過來的資料*@
         @*但是Model是什麼類型的資料，我們不知道?如果要知道Model是什麼類型的資料，要看最上面的宣告*@
@@ -38,5 +25,4 @@
         }
     </tbody>
 </table>
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page}),
-                         PagedListRenderOptions.ClassicPlusFirstAndLast)
+@*@Html.PagedListPager(Model, page => "#",PagedListRenderOptions.PageNumbersOnly)*@

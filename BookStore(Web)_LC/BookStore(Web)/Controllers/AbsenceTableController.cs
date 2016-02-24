@@ -16,93 +16,73 @@ namespace BookStore_Web_.Controllers
         Repository<Absence_Table> absenceTableRepository = null;
         Repository<Absence_Type> absenceTypeRepository = null;
         int EmpID = HomeController.EmpID = 3;
+        //int? page, Dept, Occu;
+        //string sortBy;
         public AbsenceTableController()
         {
             absenceTableRepository = new Repository<Absence_Table>(new BookStoreObject_Entities());
             absenceTypeRepository = new Repository<Absence_Type>(new BookStoreObject_Entities());
         }
         
-        public ActionResult Index(int? page, string sortBy)
+        public ActionResult Index(int? page)
         {
             ViewBag.SortAbsenceTableNo = "AbsenceTableNo";
-            ViewBag.AbsenceTableNoDesc = "AbsenceTableNo desc";
+            ViewBag.SortAbsenceTableNoDesc = "AbsenceTableNodesc";
             ViewBag.SortAbsence_Type = "Absence_Type";
-            ViewBag.SortAbsence_TypeDesc = "Absence_Type desc";
-            ViewBag.StartDate = "StartDate";
-            ViewBag.StartDateDesc = "StartDate desc";
-            ViewBag.EndDate = sortBy = "EndDate";
-            ViewBag.EndDateDesc = "EndDate desc";
-            ViewBag.Reason = "Reason";
-            ViewBag.ReasonDesc = "Reason desc";
-            ViewBag.Status = "Status";
-            ViewBag.StatusDesc = "Status desc";
+            ViewBag.SortAbsence_TypeDesc = "Absence_Typedesc";
+            ViewBag.SortStartDate = "StartDate";
+            ViewBag.SortStartDateDesc = "StartDatedesc";
+            ViewBag.SortStatus = "Status";
+            ViewBag.SortStatusDesc = "Statusdesc";
             var absenceTable = absenceTableRepository.GetAll();
-            //switch(sortBy)
-            //{
-            //    case "AbsenceTableNo":
-            //        absenceTable = absenceTable.OrderBy(p => p.Absence_No);
-            //        break;
-            //    case "AbsenceTableNo desc":
-            //        absenceTable = absenceTable.OrderByDescending(p => p.Absence_No);
-            //        break;
-            //    case "Absence_Type":
-            //        absenceTable = absenceTable.OrderBy(p => p.Absence_Type.Absence_Type1);
-            //        break;
-            //    case "Absence_Type desc":
-            //        absenceTable = absenceTable.OrderByDescending(p => p.Absence_Type.Absence_Type1);
-            //        break;
-            //    case "StartDate":
-            //        absenceTable = absenceTable.OrderBy(p => p.StartDate.Date);
-            //        break;
-            //    case "StartDate desc":
-            //        absenceTable = absenceTable.OrderByDescending(p => p.StartDate.Date);
-            //        break;
-            //    case "EndDate":
-            //        absenceTable = absenceTable.OrderBy(p => p.EndDate.Date);
-            //        break;
-            //    case "EndDate desc":
-            //        absenceTable = absenceTable.OrderByDescending(p => p.EndDate.Date);
-            //        break;
-            //    case "Reason":
-            //        absenceTable = absenceTable.OrderBy(p => p.Reason);
-            //        break;
-            //    case "Reason desc":
-            //        absenceTable = absenceTable.OrderByDescending(p => p.Reason);
-            //        break;
-            //    case "Status":
-            //        absenceTable = absenceTable.OrderBy(p => p.ChechStatus.Status);
-            //        break;
-            //    case "Status desc":
-            //        absenceTable = absenceTable.OrderByDescending(p => p.ChechStatus.Status);
-            //        break;
-            //    default:
-            //        absenceTable = absenceTable.OrderBy(p => p.Absence_No);
-            //        break;
-            //}
+            //判斷權限
             var q = db.Emp_Information.Where(p => p.EmployeeID == EmpID).Select(p => p.Emp_OccupationID).FirstOrDefault();
             if (q == 3)
                 return View(absenceTable.Where(p => p.EmployeeID == EmpID).ToList().ToPagedList(page ?? 1, 5));
             else
                 return View(absenceTable.ToList().ToPagedList(page ?? 1, 5));
-            //return View(absenceTable.ToList());
         }
 
-        //[ChildActionOnly]
-        public ActionResult IndexPartial(int? page, string sortBy, int? Dept, int? Occu)
-        {
+        public ActionResult IndexPager(int? page, int? Dept=0, int Occu=0)
+        {            
+            var absenceTable = absenceTableRepository.GetAll();
+            //判斷權限
+            var q = db.Emp_Information.Where(p => p.EmployeeID == EmpID).Select(p => p.Emp_OccupationID).FirstOrDefault();
+            if (q == 3)
+            {
+                absenceTable = absenceTable.Where(p => p.EmployeeID == EmpID).ToList();
+            }
+            else
+            {
+                if (Dept != 0 && Occu != 0)               
+                    absenceTable = absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept && p.Emp_Information.Emp_OccupationID == Occu).ToList();                
+                else if (Dept != 0 && Occu == 0)                    
+                    absenceTable = absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept).ToList();                
+                else if (Occu != 0 && Dept == 0)                
+                    absenceTable = absenceTable.Where(p => p.Emp_Information.Emp_OccupationID == Occu).ToList();                
+                else                
+                    absenceTable = absenceTable.ToList();  
+            }
+            page = SetPage(page, absenceTable.Count());
+            return PartialView(absenceTable.ToPagedList(page ?? 1, 5));
+        }
 
-            ViewBag.SortAbsenceTableNo = "AbsenceTableNo";
-            ViewBag.AbsenceTableNoDesc = "AbsenceTableNo desc";
-            ViewBag.SortAbsence_Type = "Absence_Type"; 
-            ViewBag.SortAbsence_TypeDesc = "Absence_Type desc";
-            ViewBag.StartDate = "StartDate"; 
-            ViewBag.StartDateDesc = "StartDate desc";
-            ViewBag.EndDate = sortBy = "EndDate";
-            ViewBag.EndDateDesc = "EndDate desc";
-            ViewBag.Reason = "Reason";
-            ViewBag.ReasonDesc = "Reason desc";
-            ViewBag.Status = "Status";
-            ViewBag.StatusDesc = "Status desc";
+        int? SetPage(int? page = 1, int data = 0)
+        {
+            if (data == 0)
+                return page = 1;
+            else if (data / 5 < page && data % 5 == 0)
+                return page = data / 5;
+            else if (data / 5 < page && data % 5 > 0)
+                return page = data / 5 + 1;
+            else
+                return page;
+        }
+
+
+        //[ChildActionOnly]
+        public ActionResult IndexPartial(int? page, string sortBy, int Dept=0, int Occu=0)
+        {
             var absenceTable = absenceTableRepository.GetAll();
             switch (sortBy)
             {
@@ -115,65 +95,72 @@ namespace BookStore_Web_.Controllers
                 case "Absence_Type":
                     absenceTable = absenceTable.OrderBy(p => p.Absence_Type.Absence_Type1);
                     break;
-                case "Absence_Type desc":
+                case "Absence_Typedesc":
                     absenceTable = absenceTable.OrderByDescending(p => p.Absence_Type.Absence_Type1);
                     break;
                 case "StartDate":
                     absenceTable = absenceTable.OrderBy(p => p.StartDate.Date);
                     break;
-                case "StartDate desc":
+                case "StartDatedesc":
                     absenceTable = absenceTable.OrderByDescending(p => p.StartDate.Date);
-                    break;
-                case "EndDate":
-                    absenceTable = absenceTable.OrderBy(p => p.EndDate.Date);
-                    break;
-                case "EndDate desc":
-                    absenceTable = absenceTable.OrderByDescending(p => p.EndDate.Date);
-                    break;
-                case "Reason":
-                    absenceTable = absenceTable.OrderBy(p => p.Reason);
-                    break;
-                case "Reason desc":
-                    absenceTable = absenceTable.OrderByDescending(p => p.Reason);
                     break;
                 case "Status":
                     absenceTable = absenceTable.OrderBy(p => p.ChechStatus.Status);
                     break;
-                case "Status desc":
+                case "Statusdesc":
                     absenceTable = absenceTable.OrderByDescending(p => p.ChechStatus.Status);
                     break;
                 default:
                     absenceTable = absenceTable.OrderBy(p => p.Absence_No);
                     break;
             }
-            if (Request.UrlReferrer.Query != "" && Request.UrlReferrer.Query.Split('=')[1] != "0")
-            {
-                page = Convert.ToInt32(Request.UrlReferrer.Query.Split('=')[1]);
-            }
+            //if (Request.UrlReferrer.Query != "" && Request.UrlReferrer.Query.Split('=')[1] != "0")
+            //{
+            //    page = Convert.ToInt32(Request.UrlReferrer.Query.Split('=')[1]);
+            //}
+            //var q = db.Emp_Information.Where(p => p.EmployeeID == EmpID).Select(p => p.Emp_OccupationID).FirstOrDefault();
+            //if (q == 3)
+            //    return PartialView(absenceTable.Where(p => p.EmployeeID == EmpID).ToList().ToPagedList(page ?? 1, 5));
+            //else
+            //{
+            //    if (Dept != null && Occu != null)
+            //    {
+            //        if (Dept != 0 && Occu != 0)
+            //            return PartialView(absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept && p.Emp_Information.Emp_OccupationID == Occu).ToList().ToPagedList(page ?? 1, 5));
+            //        else if (Dept != 0 && Occu == 0)
+            //        {
+            //            return PartialView(absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept).ToList().ToPagedList(page ?? 1, 5));
+            //        }
+            //        else if (Occu != 0 && Dept == 0)
+            //        {
+            //            return PartialView(absenceTable.Where(p => p.Emp_Information.Emp_OccupationID == Occu).ToList().ToPagedList(page ?? 1, 5));
+            //        }
+            //        else
+            //            return PartialView(absenceTable.ToList().ToPagedList(page ?? 1, 5));
+            //    }
+            //    else
+            //        absenceTable = absenceTable.ToList();
+            //    page = SetPage(page, absenceTable.Count());
+            //        return PartialView(absenceTable.ToPagedList(page ?? 1, 5));
+            //}
             var q = db.Emp_Information.Where(p => p.EmployeeID == EmpID).Select(p => p.Emp_OccupationID).FirstOrDefault();
             if (q == 3)
-                return PartialView(absenceTable.Where(p => p.EmployeeID == EmpID).ToList().ToPagedList(page ?? 1, 5));
+            {
+                absenceTable = absenceTable.Where(p => p.EmployeeID == EmpID).ToList();
+            }
             else
             {
-                if (Dept != null && Occu != null)
-                {
-                    if (Dept != 0 && Occu != 0)
-                        return PartialView(absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept && p.Emp_Information.Emp_OccupationID == Occu).ToList().ToPagedList(page ?? 1, 5));
-                    else if (Dept != 0 && Occu == 0)
-                    {
-                        return PartialView(absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept).ToList().ToPagedList(page ?? 1, 5));
-                    }
-                    else if (Occu != 0 && Dept == 0)
-                    {
-                        return PartialView(absenceTable.Where(p => p.Emp_Information.Emp_OccupationID == Occu).ToList().ToPagedList(page ?? 1, 5));
-                    }
-                    else
-                        return PartialView(absenceTable.ToList().ToPagedList(page ?? 1, 5));
-                }
+                if (Dept != 0 && Occu != 0)
+                    absenceTable = absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept && p.Emp_Information.Emp_OccupationID == Occu).ToList();
+                else if (Dept != 0 && Occu == 0)
+                    absenceTable = absenceTable.Where(p => p.Emp_Information.Emp_DeptID == Dept).ToList();
+                else if (Occu != 0 && Dept == 0)
+                    absenceTable = absenceTable.Where(p => p.Emp_Information.Emp_OccupationID == Occu).ToList();
                 else
-                    return PartialView(absenceTable.ToList().ToPagedList(page ?? 1, 5));
+                    absenceTable = absenceTable.ToList();
             }
-            //TODO...如果是網管人員 不需要限制employeeID
+            page = SetPage(page, absenceTable.Count());
+            return PartialView(absenceTable.ToPagedList(page ?? 1, 5));
         }
 
         public ActionResult Dept()

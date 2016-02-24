@@ -21,26 +21,17 @@
     <select id="sel2"></select>
 </div>
 <div>
-    <label>正向排序:</label>
+    <label>排序:</label>
     <select id="sel3">
-        <option value="">--請選擇--</option>
-        <option value="@ViewBag.SortAbsenceTableNo">@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString()</option>
-        <option value="@ViewBag.SortAbsence_Type">@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString()</option>
-        <option value="@ViewBag.StartDate">@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString()</option>
-        <option value="@ViewBag.EndDate">@Html.DisplayNameFor(model => model.First().EndDate).ToHtmlString()</option>
-        <option value="@ViewBag.Reason">@Html.DisplayNameFor(model => model.First().Reason).ToHtmlString()</option>
-        <option value="@ViewBag.Status">@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString()</option>
-    </select>
-    <label>反向排序:</label>
-    <select id="sel4">
-        <option value="">--請選擇--</option>
-        <option value="@ViewBag.SortAbsenceTableNoDesc">@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString()</option>
-        <option value="@ViewBag.SortAbsence_TypeDesc">@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString()</option>
-        <option value="@ViewBag.StartDateDesc">@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString()</option>
-        <option value="@ViewBag.EndDateDesc">@Html.DisplayNameFor(model => model.First().EndDate).ToHtmlString()</option>
-        <option value="@ViewBag.ReasonDesc">@Html.DisplayNameFor(model => model.First().Reason).ToHtmlString()</option>
-        <option value="@ViewBag.StatusDesc">@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString()</option>
-    </select>
+        <option value="@ViewBag.SortAbsenceTableNo">@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString() (正)</option>
+        <option value="@ViewBag.SortAbsenceTableNoDesc">@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString() (逆)</option>
+        <option value="@ViewBag.SortAbsence_Type">@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString() (正)</option>
+        <option value="@ViewBag.SortAbsence_TypeDesc">@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString() (逆)</option>
+        <option value="@ViewBag.SortStartDate">@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString() (正)</option>
+        <option value="@ViewBag.SortStartDateDesc">@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString() (逆)</option>
+        <option value="@ViewBag.SortStatus">@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString() (正)</option>
+        <option value="@ViewBag.SortStatusDesc">@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString() (逆)</option>
+    </select>    
 </div>
 
 <a href="/AbsenceTable/Add">新增假單</a>
@@ -48,49 +39,35 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString(), "Index", new { sortBy = ViewBag.SortAbsenceTableNo })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString(), "Index", new { sortBy = ViewBag.SortAbsence_Type })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString(), "Index", new { sortBy = ViewBag.StartDate })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().EndDate).ToHtmlString(), "Index", new { sortBy = ViewBag.EndDate })</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().Reason).ToHtmlString(), "Index", new { sortBy = ViewBag.Reason })</th>
+            <th>@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString()</th>
+            <th>@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString()</th>
+            <th>@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString()</th>
+            <th>@Html.DisplayNameFor(model => model.First().EndDate).ToHtmlString()</th>
+            <th>@Html.DisplayNameFor(model => model.First().Reason).ToHtmlString()</th>
             <th>@Html.DisplayNameFor(model => model.First().Certificate_Doc)</th>
-            <th>@Html.ActionLink(@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString(), "Index", new { sortBy = ViewBag.Status })</th>
+            <th>@Html.DisplayNameFor(model => model.First().ChechStatus.Status).ToHtmlString()</th>
             <th>編輯</th>
             <th>刪除</th>
         </tr>
     </thead>
-    <tbody id="div1">
-        @*Model是一個保留字，代表Controller傳過來的資料*@
-        @*但是Model是什麼類型的資料，我們不知道?如果要知道Model是什麼類型的資料，要看最上面的宣告*@
-        @*@foreach (var _Absence in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(model => _Absence.Absence_No)</td>
-                    <td>@Html.DisplayFor(p => _Absence.Absence_Type.Absence_Type1)</td>
-                    <td>@Html.DisplayFor(p => _Absence.StartDate)</td>
-                    <td>@Html.DisplayFor(p => _Absence.EndDate)</td>
-                    <td>@Html.DisplayFor(p => _Absence.Reason)</td>
-                    <td><image alt="AbsenceTable image" title="AbsenceImage" class="thumb" src="@Url.Action("GetImage", new { id = _Absence.Absence_No })"></image></td>
-                    <td>@Html.DisplayFor(p => _Absence.ChechStatus.Status)</td>
-                    <td><a href="/AbsenceTable/Edit/@_Absence.Absence_No" class="btn btn-warning">編輯</a></td>
-                    <td><a href="/AbsenceTable/Delete/@_Absence.Absence_No" class="btn btn-danger">刪除</a></td>
-                </tr>
-            }*@
-    </tbody>
-</table>
-@*@Html.PagedListPager(Model,
-                                     page => Url.Action("Index", new { page, sortBy = Request.QueryString["sortBy"]}),
-                     PagedListRenderOptions.ClassicPlusFirstAndLast)*@
+    <tbody id="div1"></tbody>
+</table><div id="mypager">
+    @Html.PagedListPager(Model, page => "#",
+                     PagedListRenderOptions.PageNumbersOnly)
+</div>
+
+
 <script>
+
     var sel = $('#sel1');
-    sel.on('change', function () { selload(); })
+    sel.on('change', function () { selload($('#mypager').children().children().children(".active").children('a').text()); })
     var sel2 = $('#sel2');
-    sel2.on('change', function () { selload(); })
+    sel2.on('change', function () { selload($('#mypager').children().children().children(".active").children('a').text()); })
     var sel3 = $('#sel3');
-    sel3.on('change', function () { selload(); })
-    var sel4 = $('#sel4');
-    sel4.on('change', function () { selload(); })
+    sel3.on('change', function () { selload($('#mypager').children().children().children(".active").children('a').text()); })
     var div = $('#div1');
+    var pager = $('#mypager');
+    pager.on('click','a', function () { selload($(this).text()); })
     $.getJSON('@Url.Action("Dept","AbsenceTable")', {}, function (datas) {
         var opt = new Option("--所有部門--", 0);
         sel.append(opt);
@@ -108,13 +85,13 @@
         });
     });
     selload();
-    function selload() {
-        if (sel3.val() === "")
-            div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val());
-        else if (sel4.val() === "")
-            div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel4.val());
-        else
-            div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val());
+    function selload(e) {
+        div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val() + '&page=' + e);
+        pager.load('/AbsenceTable/IndexPager?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val() + '&page=' + e);
+    }
+    function pagerload(e) {
+        pager.load('/AbsenceTable/IndexPager?page=' + e);
+        div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val() + '&page=' + e);
     }
 </script>
 <script src="~/Scripts/jquery-2.2.0.min.js"></script>
