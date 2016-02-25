@@ -213,6 +213,6 @@ C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\bin\zh-Hant\S
 C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\bin\zh-Hant\System.Web.Webpages.Razor.resources.dll
 C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\bin\zh-Hant\System.Web.Helpers.resources.dll
 C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\bin\zh-Hant\System.Web.Mvc.resources.dll
-C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\obj\Debug\BookStore(Web).csprojResolveAssemblyReference.cache
 C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\obj\Debug\BookStore(Web).dll
 C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\obj\Debug\BookStore(Web).pdb
+C:\Users\YiYing\Desktop\web專題\BookStore(Web)_LC\BookStore(Web)\obj\Debug\BookStore(Web).csprojResolveAssemblyReference.cache

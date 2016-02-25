@@ -13,16 +13,25 @@
         {
             <tr>
                 <td>@Html.DisplayFor(model => _Absence.Absence_No)</td>
+                <td>@Html.DisplayFor(model => _Absence.Emp_Information.Emp_Name)</td>
+                <td>@Html.DisplayFor(model => _Absence.Emp_Information.Dept_Information.Dept_Name)</td>
                 <td>@Html.DisplayFor(p => _Absence.Absence_Type.Absence_Type1)</td>
                 <td>@Html.DisplayFor(p => _Absence.StartDate)</td>
                 <td>@Html.DisplayFor(p => _Absence.EndDate)</td>
                 <td>@Html.DisplayFor(p => _Absence.Reason)</td>
                 <td><image alt="AbsenceTable image" title="AbsenceImage" class="thumb" src="@Url.Action("GetImage", new { id = _Absence.Absence_No })"></image></td>
                 <td>@Html.DisplayFor(p => _Absence.ChechStatus.Status)</td>
-                <td><a href="/AbsenceTable/Edit/@_Absence.Absence_No" class="btn btn-warning">編輯</a></td>
-                <td><a href="/AbsenceTable/Delete/@_Absence.Absence_No" class="btn btn-danger">刪除</a></td>
+                 @if (_Absence.Check_ID == 2)
+                 {          
+                      <td><a href="#" class="btn btn-warning disabled">編輯</a></td>
+                      <td><a href="#" class="btn btn-danger disabled" >刪除</a></td>
+                 } else
+                 {
+                      <td><a href="/AbsenceTable/Edit/@_Absence.Absence_No" class="btn btn-warning">編輯</a></td>
+                      <td><a href="/AbsenceTable/Delete/@_Absence.Absence_No" class="btn btn-danger">刪除</a></td>
+                 }
             </tr>
         }
     </tbody>
 </table>
-@*@Html.PagedListPager(Model, page => "#",PagedListRenderOptions.PageNumbersOnly)*@
+

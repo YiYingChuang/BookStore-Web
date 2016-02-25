@@ -3,7 +3,13 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/AdminPage.cshtml";
 }
-
+<style>
+    .thumb {
+        width: 120px;
+        height: 90px;
+        border: solid 1px black;
+    }
+</style>
 <h2>修改請假單</h2>
 <div class="container body-content">
     @using (Html.BeginForm("Edit", "AbsenceTable", FormMethod.Post, new { @class = "form-horizontal", @id = "Addform", encType = "multipart/form-data" }))
@@ -38,23 +44,15 @@
         <div class="form-group">
             @Html.LabelFor(p => p.StartDate, new { @class = "col-sm-2 control-label" })
             <div class="col-sm-10">
-                @*@Html.EditorFor(p => p.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @value = @Model.StartDate } })*@
                 <input type="datetime" id="StartDate" name="StartDate" class="form-control" value="@Model.StartDate" />
-                @*@Html.EditorFor(p => p.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "time" } })*@
-                @*<input type="time" class="form-control" id="StartDatetime" name="StartDatetime" required aria-describedby="StartDatetime-error" value=@Model.StartDate />*@
                 <div hidden id="StartDatetime-error" class="text-danger">請填寫請假起始時間</div>
-                @*@Html.ValidationMessageFor(p => p.StartDate, "", new { @class = "text-danger" })*@
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(p => p.EndDate, new { @class = "col-sm-2 control-label" })
             <div class="col-sm-10">
-                @*@Html.EditorFor(p => p.EndDate, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @value = @Model.EndDate } })*@
                 <input type="datetime" id="EndDate" name="EndDate" class="form-control" value="@Model.EndDate" />
-                @*@Html.EditorFor(p => p.EndDate, new { htmlAttributes = new { @class = "form-control", @type = "time" } })*@
-                @*<input type="time" class="form-control" id="EndDatetime" name="EndDatetime" required aria-describedby="EndDatetime-error" />*@
                 <div hidden id="EndDatetime-error" class="text-danger">請填寫請假結束時間</div>
-                @*@Html.ValidationMessageFor(p => p.EndDate, "", new { @class = "text-danger" })*@
             </div>
         </div>
         <div class="form-group">
@@ -68,15 +66,68 @@
         <div class="form-group">
             @Html.LabelFor(p => p.Certificate_Doc, new { @class = "col-sm-2 control-label" })
             <div class="col-sm-10">
+                <div class="form-group">
+                    <image alt="AbsenceTable image" title="AbsenceImage" class="form-control thumb" src="@Url.Action("GetImage", new { id = @Model.Absence_No })"></image>
+                    <p>(原始證明)</p>
+                </div>
                 <input type="file" name="CertificateDoc" id="CertificateDoc" value="img" accept="image/x-png, image/gif, image/jpeg, image/jpg" />
                 <input type="hidden" class="form-control" name="Certificate_Doc_ErrorMessage" id="Certificate_Doc_ErrorMessage" />
             </div>
         </div>
-        @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <input type="submit" class="btn btn-default" id="Addbtn" value="新增" />
+                <input type="submit" class="btn btn-default" id="Addbtn" value="修改" />
+                <a href="@Url.Action("Index","AbsenceTable")" class="btn btn-default" >回上一頁</a>
+                <div hidden id="ErrorMessage" class="text-danger">假單已審核完成，無法進行修改!</div>
             </div>
         </div>
     }
 </div>
+<script>
+    var startDate = $('#StartDate');
+    var endDate = $('#EndDate');
+    var startDateError = $('#StartDatetime-error');
+    var endDateError = $('#EndDatetime-error');
+    function checkDateTime() {
+        
+        if (startDate.val() === "") {
+            startDateError.text("請填寫請假起始時間!!");
+            startDateError.show()
+            return false;
+        }
+        else
+            startDateError.hide();
+
+        if (endDate.val() === "") {
+            endDateError.text("請填寫請假結束時間!!");
+            endDateError.show();
+            return false;
+        }
+        else
+            endDateError.hide();
+
+        if (startDate.val() >= endDate.val()) {
+            startDateError.text("請假起始時間不可晚於或等於結束時間!!");
+            startDateError.show();
+            return false;
+        }
+        else
+            return true;
+    }
+
+
+    $('#Addbtn').on('click', function (e) {
+        if (checkDateTime()) {
+            if ($('#Check_ID').val() === "2") {
+                $('#ErrorMessage').show();
+                return false;
+            }
+            else {
+                $('#Addform').submit();
+            }
+        }
+        else
+            return false;
+    })
+</script>
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>

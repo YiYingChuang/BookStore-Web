@@ -40,6 +40,8 @@
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.First().Absence_No).ToHtmlString()</th>
+            <th>@Html.DisplayNameFor(model => model.First().Emp_Information.Emp_Name).ToHtmlString()</th>
+            <th>@Html.DisplayNameFor(model => model.First().Emp_Information.Emp_DeptID).ToHtmlString()</th>
             <th>@Html.DisplayNameFor(model => model.First().Absence_Type.Absence_Type1).ToHtmlString()</th>
             <th>@Html.DisplayNameFor(model => model.First().StartDate).ToHtmlString()</th>
             <th>@Html.DisplayNameFor(model => model.First().EndDate).ToHtmlString()</th>
@@ -51,7 +53,8 @@
         </tr>
     </thead>
     <tbody id="div1"></tbody>
-</table><div id="mypager">
+</table>
+<div id="mypager">
     @Html.PagedListPager(Model, page => "#",
                      PagedListRenderOptions.PageNumbersOnly)
 </div>
@@ -88,10 +91,6 @@
     function selload(e) {
         div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val() + '&page=' + e);
         pager.load('/AbsenceTable/IndexPager?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val() + '&page=' + e);
-    }
-    function pagerload(e) {
-        pager.load('/AbsenceTable/IndexPager?page=' + e);
-        div.load('/AbsenceTable/IndexPartial?Dept=' + sel.val() + '&Occu=' + sel2.val() + '&sortBy=' + sel3.val() + '&page=' + e);
     }
 </script>
 <script src="~/Scripts/jquery-2.2.0.min.js"></script>

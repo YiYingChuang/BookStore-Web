@@ -1,0 +1,126 @@
+﻿@model BookStore_Web_.Models.Absence_Table
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/AdminPage.cshtml";
+}
+<style>
+    .thumb {
+        width: 120px;
+        height: 90px;
+        border: solid 1px black;
+    }
+</style>
+<h2>修改請假單</h2>
+<div class="container body-content">
+    @using (Html.BeginForm("Edit", "AbsenceMIS", FormMethod.Post, new { @class = "form-horizontal", @id = "Addform", encType = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(p => p.EmployeeID, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="@Model.Emp_Information.Emp_Name" readonly />
+                <input type="hidden" id="EmployeeID" name="EmployeeID" class="form-control" value="@Model.EmployeeID" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Absence_No, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                <input type="text" id="Absence_No" name="Absence_No" class="form-control" value="@Model.Absence_No" readonly />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Check_ID, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="@Model.ChechStatus.Status" readonly />
+                <input type="hidden" id="Check_ID" name="Check_ID" value="@Model.Check_ID" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Absence_ID, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.DropDownListFor(p => p.Absence_ID, (SelectList)ViewBag.AbsenceType, "--請選擇--", new { @class = "form-control", @value = @Model.Absence_ID })
+                @Html.ValidationMessageFor(p => p.Absence_ID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.StartDate, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                <input type="datetime" id="StartDate" name="StartDate" class="form-control" value="@Model.StartDate" />
+                <div hidden id="StartDatetime-error" class="text-danger">請填寫請假起始時間</div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.EndDate, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                <input type="datetime" id="EndDate" name="EndDate" class="form-control" value="@Model.EndDate" />
+                <div hidden id="EndDatetime-error" class="text-danger">請填寫請假結束時間</div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Reason, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(p => p.Reason, new { htmlAttributes = new { @class = "form-control", placeholder = "字數不得超過300" } })
+                @Html.ValidationMessageFor(p => p.Reason, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Certificate_Doc, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                <div class="form-group">
+                    <image alt="AbsenceTable image" title="AbsenceImage" class="form-control thumb" src="@Url.Action("GetImage", new { id = @Model.Absence_No })"></image>
+                    <p>(原始證明)</p>
+                </div>
+                <input type="file" name="CertificateDoc" id="CertificateDoc" value="img" accept="image/x-png, image/gif, image/jpeg, image/jpg" />
+                <input type="hidden" class="form-control" name="Certificate_Doc_ErrorMessage" id="Certificate_Doc_ErrorMessage" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-default" id="Addbtn" value="修改" />
+                <a href="@Url.Action("MIS","AbsenceMIS")" class="btn btn-default">回上一頁</a>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    var startDate = $('#StartDate');
+    var endDate = $('#EndDate');
+    var startDateError = $('#StartDatetime-error');
+    var endDateError = $('#EndDatetime-error');
+    function checkDateTime() {
+
+        if (startDate.val() === "") {
+            startDateError.text("請填寫請假起始時間!!");
+            startDateError.show()
+            return false;
+        }
+        else
+            startDateError.hide();
+
+        if (endDate.val() === "") {
+            endDateError.text("請填寫請假結束時間!!");
+            endDateError.show();
+            return false;
+        }
+        else
+            endDateError.hide();
+
+        if (startDate.val() >= endDate.val()) {
+            startDateError.text("請假起始時間不可晚於或等於結束時間!!");
+            startDateError.show();
+            return false;
+        }
+        else
+            return true;
+    }
+
+
+    $('#Addbtn').on('click', function (e) {
+        if (checkDateTime())            
+            $('#Addform').submit();  
+        else
+            return false;
+    })
+</script>
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+

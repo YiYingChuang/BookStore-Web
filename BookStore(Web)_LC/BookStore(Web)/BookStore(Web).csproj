@@ -202,6 +202,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AbsenceCheckController.cs" />
+    <Compile Include="Controllers\AbsenceMISController.cs" />
     <Compile Include="Controllers\AbsenceTableController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
@@ -317,6 +319,13 @@
     <Content Include="Views\Home\Action.cshtml" />
     <Content Include="Views\AbsenceTable\IndexPartial.cshtml" />
     <Content Include="Views\AbsenceTable\IndexPager.cshtml" />
+    <Content Include="Views\AbsenceCheck\Check.cshtml" />
+    <Content Include="Views\AbsenceCheck\CheckPager.cshtml" />
+    <Content Include="Views\AbsenceCheck\CheckPartial.cshtml" />
+    <Content Include="Views\AbsenceMIS\MIS.cshtml" />
+    <Content Include="Views\AbsenceMIS\MISPager.cshtml" />
+    <Content Include="Views\AbsenceMIS\MISPartial.cshtml" />
+    <Content Include="Views\AbsenceMIS\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
